@@ -3,13 +3,20 @@ project(StrlenBenchmark)
 
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(benchmark)
+find_package(benchmark REQUIRED)
 
-add_executable(strlen-static benchmark.cpp)
-target_link_libraries(strlen-static benchmark::benchmark)
-target_link_options(strlen-static PUBLIC "-static")
+add_executable(strlen strlen.cpp)
+target_link_libraries(strlen benchmark::benchmark)
 
-add_executable(strlen-dynamic benchmark.cpp)
-target_link_libraries(strlen-dynamic benchmark::benchmark)
-target_link_options(strlen-dynamic PUBLIC "-dynamic")
+set(BSWAP_OBJS bswap/bswap_vec.o bswap/bswap_no_vec.o)
+add_executable(bswap bswap.cpp ${BSWAP_OBJS})
+target_link_libraries(bswap benchmark::benchmark)
+
+set_source_files_properties(
+    ${BSWAP_OBJS}
+    PROPERTIES
+    EXTERNAL_OBJECT true
+    GENERATED true
+)
+
 
